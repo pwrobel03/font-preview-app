@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+      },
       colors: {
         surface: {
           DEFAULT: "var(--color-surface)",
@@ -20,6 +23,9 @@ const config: Config = {
         },
         accent: "var(--color-accent)",
         border: "var(--color-border)",
+      },
+      boxShadow: {
+        lg: "0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)",
       },
     },
   },

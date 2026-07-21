@@ -1,61 +1,85 @@
 /**
- * Sample content used in FontPreview.
- * Facts about South American countries — English.
+ * Content for the FontPreview landing page.
+ * South American facts — English.
  */
 
-export const CONTENT = {
+export const HERO = {
+  eyebrow: "Discover the continent",
   h1: "Wonders of South America",
-
-  h2: "A Continent of Extremes",
-
-  h3: "The Amazon: Earth's Breathing Room",
-
-  h4: "Highland Civilisations & Ocean Currents",
-
-  bodyLong: `Brazil is home to the Amazon rainforest, which covers over 5.5 million
-square kilometres and produces roughly 20% of the world's oxygen. The forest
-contains more species of plants and animals than any other terrestrial ecosystem
-on Earth — scientists estimate that a single hectare holds more tree species than
-the entirety of temperate North America.
-
-Bolivia sits at an average elevation of 3,240 metres above sea level, making it
-the highest country in the world by mean altitude. Its Salar de Uyuni salt flat
-spans more than 10,000 km² and, after rain, becomes the world's largest natural
-mirror — reflecting the sky so perfectly that satellites use it to calibrate their
-altitude sensors.
-
-Chile stretches 4,300 kilometres from north to south, spanning climates from the
-driest non-polar desert on Earth — the Atacama — to sub-Antarctic glaciers in
-Patagonia. The Atacama receives less than 1 mm of rainfall per year in its core
-zones and hosts astronomical observatories that take advantage of its virtually
-cloudless skies.`,
-
-  bodyShort: `Peru's Machu Picchu was built by the Inca emperor Pachacuti around 1450 AD
-at an altitude of 2,430 metres. Remarkably, the Spanish conquistadors never found
-it — the city was abandoned roughly 100 years after its construction and remained
-unknown to the outside world until Hiram Bingham rediscovered it in 1911.`,
-
-  pullQuote: `"Venezuela's Canaima National Park is home to Angel Falls — the world's
-highest uninterrupted waterfall at 979 metres — nearly twenty times the height of
-Niagara Falls. The falls plunge from the Auyán-tepui plateau, one of dozens of
-ancient sandstone tabletop mountains called tepuis."`,
-
-  caption: `The Galápagos Islands, part of Ecuador, sit 906 km west of the South
-American mainland. Their extreme isolation drove the evolution of species found
-nowhere else on Earth, directly inspiring Charles Darwin's theory of natural
-selection after his 1835 visit.`,
-
-  listHeading: "Five Record-Breaking Facts",
-
-  listItems: [
-    "Argentina's Perito Moreno Glacier is one of the few glaciers in the world still advancing, at a rate of roughly two metres per day.",
-    "The Pantanal in Brazil, Bolivia and Paraguay is the world's largest tropical wetland, covering up to 195,000 km² during flood season.",
-    "Colombia is the only country in South America with coastlines on both the Pacific Ocean and the Caribbean Sea.",
-    "Paraguay is one of only two landlocked countries in South America — the other being Bolivia.",
-    "Suriname has the highest proportion of forest cover of any sovereign nation on Earth: over 93% of its territory remains forested.",
-  ],
-
-  linkText: "Explore the biodiversity of the Cerrado savanna →",
-
-  metaLabel: "Typography specimen · South America",
+  subtitle:
+    "A land of extremes — from the driest desert on Earth to the lungs of our planet. Explore the facts, landscapes, and cultures that make this continent unlike any other.",
+  cta: "Start exploring",
+  ctaSecondary: "Learn more",
 };
+
+export const STATS = [
+  { value: "17.8M", label: "km² of territory" },
+  { value: "440M+", label: "people" },
+  { value: "12", label: "sovereign nations" },
+  { value: "~40%", label: "of world's biodiversity" },
+];
+
+export const CARDS = [
+  {
+    id: 1,
+    category: "Geography",
+    title: "The longest mountain range",
+    body: "The Andes stretch 7,000 km across seven countries, making them the longest continental mountain range on Earth. Aconcagua, at 6,961 m, is the highest peak in both the Western and Southern hemispheres.",
+    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
+    imageAlt: "Andes mountains under dramatic clouds",
+  },
+  {
+    id: 2,
+    category: "Nature",
+    title: "The world's highest waterfall",
+    body: "Angel Falls in Venezuela plunges 979 metres — nearly 20 times the height of Niagara. The water falls from the Auyán-tepui plateau and disperses into mist long before reaching the ground.",
+    image: "https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?w=600&q=80",
+    imageAlt: "Tropical waterfall in Venezuela",
+  },
+  {
+    id: 3,
+    category: "Climate",
+    title: "Earth's driest place",
+    body: "Chile's Atacama Desert receives less than 1 mm of rain per year in its core zones. So Mars-like is its terrain that NASA tests rovers there. Yet fog from the Pacific sustains unique flora along its coast.",
+    image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80",
+    imageAlt: "Patagonia landscape with glaciers",
+  },
+  {
+    id: 4,
+    category: "Ecology",
+    title: "The lungs of the planet",
+    body: "The Amazon rainforest covers 5.5 million km² and produces roughly 20% of Earth's oxygen. It harbours an estimated 10% of all species on Earth — many still undiscovered by science.",
+    image: "https://images.unsplash.com/photo-1516026672322-bc52d61a4e2b?w=600&q=80",
+    imageAlt: "Amazon rainforest canopy from above",
+  },
+  {
+    id: 5,
+    category: "History",
+    title: "The lost city of the Incas",
+    body: "Machu Picchu was built around 1450 by Inca emperor Pachacuti at 2,430 m altitude. The Spanish never found it — the city was abandoned and remained unknown to the outside world until 1911.",
+    image: "https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80",
+    imageAlt: "Machu Picchu ruins in the Andes",
+  },
+  {
+    id: 6,
+    category: "Geology",
+    title: "The world's largest mirror",
+    body: "Bolivia's Salar de Uyuni covers 10,000 km² of blinding white salt. After rains, a thin layer of water creates a perfect reflection of the sky — so accurate that satellites use it to calibrate their altitude sensors.",
+    image: "https://images.unsplash.com/photo-1563396983906-b3795482a59a?w=600&q=80",
+    imageAlt: "Salar de Uyuni salt flat reflection",
+  },
+];
+
+export const PULL_QUOTE = {
+  text: "South America is not a continent — it is a world unto itself. Every latitude holds a different civilisation, a different climate, a different story.",
+  attribution: "— Alexander von Humboldt, 1799",
+};
+
+export const DARK_SECTION = {
+  h2: "A continent still full of secrets",
+  body: "From the cloud forests of Ecuador to the sub-Antarctic channels of Tierra del Fuego, South America rewards those who look beyond the obvious. The Pantanal — the world's largest tropical wetland — floods an area the size of France each wet season. Suriname keeps more than 93% of its territory forested. Colombia is the only country on Earth with coastlines on both the Pacific and the Caribbean.",
+  cta: "View all facts",
+};
+
+export const FOOTER_TEXT =
+  "Typography specimen · Wonders of South America · Built with Next.js";

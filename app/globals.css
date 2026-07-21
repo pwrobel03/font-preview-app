@@ -2,39 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Light theme (default) ─────────────────────────────────────────────── */
+/* ── Light theme ─────────────────────────────────────────────────────────── */
 :root {
   --color-surface: #ffffff;
-  --color-surface-subtle: #f5f5f4;
-  --color-ink: #171717;
+  --color-surface-subtle: #fafafa;
+  --color-ink: #111111;
   --color-ink-muted: #737373;
   --color-accent: #2563eb;
-  --color-border: #e5e5e5;
+  --color-border: #e8e8e8;
 }
 
-/* ── Dark theme ─────────────────────────────────────────────────────────── */
+/* ── Dark theme ──────────────────────────────────────────────────────────── */
 .dark {
-  --color-surface: #111111;
-  --color-surface-subtle: #1c1c1c;
-  --color-ink: #f5f5f5;
-  --color-ink-muted: #a3a3a3;
-  --color-accent: #60a5fa;
-  --color-border: #2a2a2a;
+  --color-surface: #0f0f0f;
+  --color-surface-subtle: #181818;
+  --color-ink: #f0f0f0;
+  --color-ink-muted: #888888;
+  --color-accent: #4f83f1;
+  --color-border: #252525;
 }
+
+* { box-sizing: border-box; }
 
 body {
   background-color: var(--color-surface);
   color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── Subset badge colours ───────────────────────────────────────────────── */
+/* ── Subset badge colours ────────────────────────────────────────────────── */
 .subset-badge {
-  @apply inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: system-ui, sans-serif;
+  line-height: 1.4;
 }
-.subset-latin       { @apply bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300; }
-.subset-latin-ext   { @apply bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300; }
-.subset-cyrillic    { @apply bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300; }
-.subset-cyrillic-ext{ @apply bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/40 dark:text-fuchsia-300; }
-.subset-greek       { @apply bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300; }
-.subset-vietnamese  { @apply bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300; }
-.subset-devanagari  { @apply bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300; }
+.subset-latin        { background: #eff6ff; color: #1d4ed8; }
+.subset-latin-ext    { background: #eef2ff; color: #4338ca; }
+.subset-cyrillic     { background: #f5f3ff; color: #6d28d9; }
+.subset-cyrillic-ext { background: #fdf4ff; color: #86198f; }
+.subset-greek        { background: #fffbeb; color: #b45309; }
+.subset-vietnamese   { background: #f0fdf4; color: #166534; }
+.subset-devanagari   { background: #fff7ed; color: #c2410c; }
+
+.dark .subset-latin        { background: #1e3a6e; color: #93c5fd; }
+.dark .subset-latin-ext    { background: #2e2870; color: #a5b4fc; }
+.dark .subset-cyrillic     { background: #2e1f5e; color: #c4b5fd; }
+.dark .subset-cyrillic-ext { background: #3b0d56; color: #e879f9; }
+.dark .subset-greek        { background: #451a03; color: #fcd34d; }
+.dark .subset-vietnamese   { background: #052e16; color: #86efac; }
+.dark .subset-devanagari   { background: #431407; color: #fdba74; }
+
+/* ── Range slider ────────────────────────────────────────────────────────── */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-border);
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  cursor: pointer;
+  border: 2px solid var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  cursor: pointer;
+  border: 2px solid var(--color-surface);
+}
+
+/* ── Scrollbar (webkit) ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+
+/* ── Utilities ───────────────────────────────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Dark-panel slider (used in font selector panel) ─────────────────────── */
+.slider-dark {
+  background: rgba(255,255,255,0.15);
+}
+.slider-dark::-webkit-slider-thumb {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.4);
+  border-color: transparent;
+}
+.slider-dark::-moz-range-thumb {
+  background: #ffffff;
+  border-color: transparent;
+}

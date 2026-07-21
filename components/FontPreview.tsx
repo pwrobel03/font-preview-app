@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { loadGoogleFont } from "@/lib/font-loader";
-import { CONTENT } from "@/lib/content";
+import { HERO, STATS, CARDS, PULL_QUOTE, DARK_SECTION, FOOTER_TEXT } from "@/lib/content";
 import type { FontRecord } from "@/types";
 
 interface Props {
@@ -17,126 +17,193 @@ export default function FontPreview({ font, baseSizePx = 16 }: Props) {
     }
   }, [font]);
 
-  const style = {
-    fontFamily: font.familyCss,
-    fontSize: `${baseSizePx}px`,
-  } as React.CSSProperties;
+  const ff = font.familyCss;
+  const fs = (scale: number) => `${Math.round(baseSizePx * scale)}px`;
 
   return (
-    <article style={style} className="text-ink leading-relaxed space-y-8">
+    <div style={{ fontFamily: ff }} className="overflow-hidden rounded-xl border border-border">
 
-      {/* Heading scale */}
-      <section className="space-y-2 pb-6 border-b border-border">
-        <p className="text-[10px] uppercase tracking-widest text-ink-muted font-sans mb-4">
-          Heading scale
-        </p>
-        <h1 style={{ fontSize: `${baseSizePx * 3}px`, lineHeight: 1.1 }} className="font-bold">
-          {CONTENT.h1}
-        </h1>
-        <h2 style={{ fontSize: `${baseSizePx * 2.25}px`, lineHeight: 1.2 }} className="font-bold">
-          {CONTENT.h2}
-        </h2>
-        <h3 style={{ fontSize: `${baseSizePx * 1.75}px`, lineHeight: 1.3 }} className="font-semibold">
-          {CONTENT.h3}
-        </h3>
-        <h4 style={{ fontSize: `${baseSizePx * 1.375}px`, lineHeight: 1.4 }} className="font-semibold">
-          {CONTENT.h4}
-        </h4>
-      </section>
-
-      {/* Body text */}
-      <section className="pb-6 border-b border-border space-y-4">
-        <p className="text-[10px] uppercase tracking-widest text-ink-muted font-sans mb-4">
-          Body text
-        </p>
-        {CONTENT.bodyLong.split("\n\n").map((para, i) => (
-          <p key={i} style={{ fontSize: `${baseSizePx}px`, lineHeight: 1.7 }}>
-            {para}
+      {/* ── HERO — full-bleed photo ───────────────────────────────────────── */}
+      <section className="relative h-[520px] flex items-end overflow-hidden">
+        {/* Background photo */}
+        <img
+          src="https://images.unsplash.com/photo-1526392060635-9d6019884377?w=1400&q=85"
+          alt="Machu Picchu, Peru"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Gradient overlay — bottom-heavy so text is legible */}
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.05) 100%)" }}
+        />
+        {/* Content anchored to bottom */}
+        <div className="relative w-full px-8 sm:px-14 pb-12">
+          <p
+            style={{ fontSize: fs(0.75), letterSpacing: "0.18em" }}
+            className="uppercase text-white/60 mb-3"
+          >
+            {HERO.eyebrow}
           </p>
-        ))}
-      </section>
-
-      {/* Pull quote */}
-      <section className="pb-6 border-b border-border">
-        <p className="text-[10px] uppercase tracking-widest text-ink-muted font-sans mb-4">
-          Pull quote
-        </p>
-        <blockquote
-          style={{ fontSize: `${baseSizePx * 1.25}px`, lineHeight: 1.55 }}
-          className="border-l-4 border-accent pl-5 italic text-ink-muted"
-        >
-          {CONTENT.pullQuote}
-        </blockquote>
-      </section>
-
-      {/* Image caption */}
-      <section className="pb-6 border-b border-border">
-        <p className="text-[10px] uppercase tracking-widest text-ink-muted font-sans mb-4">
-          Caption
-        </p>
-        {/* Placeholder image */}
-        <div className="w-full aspect-video bg-surface-subtle rounded-md mb-3 flex items-center justify-center">
-          <svg className="text-border" width="48" height="48" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="1.5">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="m21 15-5-5L5 21"/>
-          </svg>
-        </div>
-        <p
-          style={{ fontSize: `${baseSizePx * 0.875}px`, lineHeight: 1.5 }}
-          className="text-ink-muted"
-        >
-          {CONTENT.caption}
-        </p>
-      </section>
-
-      {/* List */}
-      <section className="pb-6 border-b border-border">
-        <p className="text-[10px] uppercase tracking-widest text-ink-muted font-sans mb-4">
-          List
-        </p>
-        <p
-          style={{ fontSize: `${baseSizePx * 1.125}px` }}
-          className="font-semibold mb-3"
-        >
-          {CONTENT.listHeading}
-        </p>
-        <ul className="space-y-2">
-          {CONTENT.listItems.map((item, i) => (
-            <li
-              key={i}
-              style={{ fontSize: `${baseSizePx}px`, lineHeight: 1.6 }}
-              className="flex gap-2"
+          <h1
+            style={{ fontSize: fs(3.5), fontWeight: 800, lineHeight: 1.08, letterSpacing: "-0.02em" }}
+            className="text-white max-w-3xl mb-5"
+          >
+            {HERO.h1}
+          </h1>
+          <p
+            style={{ fontSize: fs(1.125), lineHeight: 1.65 }}
+            className="text-white/75 max-w-xl mb-8"
+          >
+            {HERO.subtitle}
+          </p>
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              style={{ fontSize: fs(0.9375), fontWeight: 600, fontFamily: ff }}
+              className="px-6 py-2.5 rounded-full bg-white text-slate-900 hover:bg-white/90 transition-colors"
             >
-              <span className="text-accent shrink-0 mt-1">→</span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
+              {HERO.cta}
+            </button>
+            <button
+              style={{ fontSize: fs(0.9375), fontFamily: ff }}
+              className="px-6 py-2.5 rounded-full border border-white/40 text-white hover:bg-white/10 transition-colors"
+            >
+              {HERO.ctaSecondary}
+            </button>
+          </div>
+        </div>
+        {/* Photo credit */}
+        <span className="absolute bottom-3 right-4 text-[10px] text-white/30 font-sans">
+          Photo: Unsplash
+        </span>
       </section>
 
-      {/* Small text & link */}
-      <section>
-        <p className="text-[10px] uppercase tracking-widest text-ink-muted font-sans mb-4">
-          Small text &amp; link
-        </p>
-        <p style={{ fontSize: `${baseSizePx * 0.875}px` }} className="text-ink-muted mb-2">
-          {CONTENT.bodyShort}
-        </p>
-        <a
-          href="#"
-          style={{ fontSize: `${baseSizePx}px` }}
-          className="text-accent underline underline-offset-4 hover:opacity-80 transition-opacity"
-        >
-          {CONTENT.linkText}
-        </a>
-        <p
-          style={{ fontSize: `${baseSizePx * 0.75}px` }}
-          className="text-ink-muted mt-6 font-sans"
-        >
-          {CONTENT.metaLabel} · {font.name} · {font.category.replace("_", "-").toLowerCase()}
-        </p>
+      {/* ── STATS BAR ─────────────────────────────────────────────────────── */}
+      <div className="bg-surface-subtle border-b border-border">
+        <div className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center divide-x divide-border">
+          {STATS.map((s) => (
+            <div key={s.label} className="px-4">
+              <p
+                style={{ fontSize: fs(2.1), fontWeight: 800, lineHeight: 1 }}
+                className="text-ink"
+              >
+                {s.value}
+              </p>
+              <p style={{ fontSize: fs(0.8) }} className="text-ink-muted mt-1.5">
+                {s.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CARDS GRID ────────────────────────────────────────────────────── */}
+      <section className="bg-slate-50 dark:bg-surface-subtle px-6 sm:px-12 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <h2
+              style={{ fontSize: fs(2.25), fontWeight: 700, lineHeight: 1.2 }}
+              className="text-slate-800 dark:text-ink mb-4"
+            >
+              Did you know…?
+            </h2>
+            <div className="w-16 h-0.5 bg-slate-300 dark:bg-border mx-auto" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {CARDS.map((card) => (
+              <article
+                key={card.id}
+                className="bg-white dark:bg-surface rounded-xl overflow-hidden
+                           border border-slate-100 dark:border-border
+                           hover:shadow-lg transition-shadow duration-300 group"
+              >
+                <div className="aspect-[16/9] overflow-hidden">
+                  <img
+                    src={card.image}
+                    alt={card.imageAlt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-6">
+                  <span
+                    style={{ fontSize: fs(0.6875) }}
+                    className="inline-block uppercase tracking-widest text-slate-400 dark:text-ink-muted font-sans mb-2"
+                  >
+                    {card.category}
+                  </span>
+                  <h3
+                    style={{ fontSize: fs(1.125), fontWeight: 700, lineHeight: 1.3 }}
+                    className="text-slate-800 dark:text-ink mb-3"
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    style={{ fontSize: fs(0.9375), lineHeight: 1.7 }}
+                    className="text-slate-500 dark:text-ink-muted"
+                  >
+                    {card.body}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
-    </article>
+
+      {/* ── PULL QUOTE ────────────────────────────────────────────────────── */}
+      <section className="bg-surface px-6 sm:px-12 py-20 border-y border-slate-100 dark:border-border">
+        <div className="max-w-3xl mx-auto text-center">
+          <p
+            style={{ fontSize: fs(1.6), lineHeight: 1.55, fontStyle: "italic", fontWeight: 400 }}
+            className="text-slate-700 dark:text-ink mb-6"
+          >
+            &ldquo;{PULL_QUOTE.text}&rdquo;
+          </p>
+          <p style={{ fontSize: fs(0.875) }} className="text-slate-400 dark:text-ink-muted">
+            {PULL_QUOTE.attribution}
+          </p>
+        </div>
+      </section>
+
+      {/* ── CTA SECTION ───────────────────────────────────────────────────── */}
+      <section className="bg-surface-subtle border-t border-border px-6 sm:px-12 py-20">
+        <div className="max-w-3xl mx-auto">
+          <h2
+            style={{ fontSize: fs(2.25), fontWeight: 700, lineHeight: 1.2 }}
+            className="text-ink mb-6"
+          >
+            {DARK_SECTION.h2}
+          </h2>
+          <p
+            style={{ fontSize: fs(1.0625), lineHeight: 1.8 }}
+            className="text-ink-muted mb-10"
+          >
+            {DARK_SECTION.body}
+          </p>
+          <button
+            style={{ fontSize: fs(0.9375), fontWeight: 600, fontFamily: ff }}
+            className="inline-flex items-center gap-2 text-accent border-b border-accent/30
+                       hover:border-accent pb-0.5 transition-colors"
+          >
+            {DARK_SECTION.cta}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      {/* ── FOOTER ────────────────────────────────────────────────────────── */}
+      <footer className="bg-surface border-t border-border px-8 py-5">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          <p style={{ fontSize: fs(0.8125) }} className="text-ink-muted font-sans">{FOOTER_TEXT}</p>
+          <p style={{ fontSize: fs(0.8125) }} className="text-ink-muted font-sans">
+            Previewing: <span className="text-ink">{font.name}</span>
+          </p>
+        </div>
+      </footer>
+
+    </div>
   );
 }
