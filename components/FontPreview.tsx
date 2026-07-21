@@ -26,7 +26,7 @@ export default function FontPreview({ font, baseSizePx = 16, compact = false }: 
       <section className="relative h-[520px] flex items-end overflow-hidden">
         {/* Background photo */}
         <img
-          src="https://images.unsplash.com/photo-1526392060635-9d6019884377?w=1400&q=85"
+          src="/assets/Macchu-Picchu-overhead.webp"
           alt="Machu Picchu, Peru"
           className="absolute inset-0 w-full h-full object-cover"
         />

@@ -25,7 +25,7 @@ export const CARDS = [
     category: "Geography",
     title: "The longest mountain range",
     body: "The Andes stretch 7,000 km across seven countries, making them the longest continental mountain range on Earth. Aconcagua, at 6,961 m, is the highest peak in both the Western and Southern hemispheres.",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
+    image: "/assets/andes.webp",
     imageAlt: "Andes mountains under dramatic clouds",
   },
   {
@@ -33,7 +33,7 @@ export const CARDS = [
     category: "Nature",
     title: "The world's highest waterfall",
     body: "Angel Falls in Venezuela plunges 979 metres — nearly 20 times the height of Niagara. The water falls from the Auyán-tepui plateau and disperses into mist long before reaching the ground.",
-    image: "https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?w=600&q=80",
+    image: "/assets/waterfall.webp",
     imageAlt: "Tropical waterfall in Venezuela",
   },
   {
@@ -41,7 +41,7 @@ export const CARDS = [
     category: "Climate",
     title: "Earth's driest place",
     body: "Chile's Atacama Desert receives less than 1 mm of rain per year in its core zones. So Mars-like is its terrain that NASA tests rovers there. Yet fog from the Pacific sustains unique flora along its coast.",
-    image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80",
+    image: "/assets/desert.webp",
     imageAlt: "Patagonia landscape with glaciers",
   },
   {
@@ -49,7 +49,7 @@ export const CARDS = [
     category: "Ecology",
     title: "The lungs of the planet",
     body: "The Amazon rainforest covers 5.5 million km² and produces roughly 20% of Earth's oxygen. It harbours an estimated 10% of all species on Earth — many still undiscovered by science.",
-    image: "https://images.unsplash.com/photo-1516026672322-bc52d61a4e2b?w=600&q=80",
+    image: "/assets/rainforest.webp",
     imageAlt: "Amazon rainforest canopy from above",
   },
   {
@@ -57,7 +57,7 @@ export const CARDS = [
     category: "History",
     title: "The lost city of the Incas",
     body: "Machu Picchu was built around 1450 by Inca emperor Pachacuti at 2,430 m altitude. The Spanish never found it — the city was abandoned and remained unknown to the outside world until 1911.",
-    image: "https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80",
+    image: "/assets/incas.webp",
     imageAlt: "Machu Picchu ruins in the Andes",
   },
   {
@@ -65,7 +65,7 @@ export const CARDS = [
     category: "Geology",
     title: "The world's largest mirror",
     body: "Bolivia's Salar de Uyuni covers 10,000 km² of blinding white salt. After rains, a thin layer of water creates a perfect reflection of the sky — so accurate that satellites use it to calibrate their altitude sensors.",
-    image: "https://images.unsplash.com/photo-1563396983906-b3795482a59a?w=600&q=80",
+    image: "/assets/bolivia.webp",
     imageAlt: "Salar de Uyuni salt flat reflection",
   },
 ];
