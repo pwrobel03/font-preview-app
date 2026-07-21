@@ -4,16 +4,13 @@
 
 An internal tool for browsing, comparing, and managing typefaces — built with Next.js, Prisma, and Tailwind CSS.
 
-<table>
-  <tr>
-    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/preview.png" alt="Preview" height="300"/></td>
-    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/gallery.png" alt="Gallery view" height="300"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/compare.png" alt="Compare view" height="300"/></td>
-    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/playground.png" alt="Playground view" height="300"/></td>
-  </tr>
-</table>
+<img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/compare.png" alt="Compare view" width="100%"/>
+
+<p align="center">
+  <img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/preview.png" alt="Preview" width="32%">
+  <img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/gallery.png" alt="Gallery view" width="32%"/>
+  <img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/playground.png" alt="Playground view" width="32%"/>
+</p>
 
 > [!NOTE]
 > Because of the fact that the app is public, I haven't provide access to admin panel for everyone. You can test admin future only by setting up your own app.
