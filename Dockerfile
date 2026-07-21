@@ -28,7 +28,7 @@ COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 
 # Dependencies required to run migrations and seeding at runtime
-RUN npm install prisma tsx @prisma/client
+RUN npm install -g prisma tsx && npm install @prisma/client
 
 # Directory for local fonts
 RUN mkdir -p /app/public/fonts && chown -R node:node /app/public
