@@ -4,6 +4,9 @@
 
 An internal tool for browsing, comparing, and managing typefaces — built with Next.js, Prisma, and Tailwind CSS.
 
+> [!NOTE]
+> Because of the fact that the app is public, I haven't provide access to admin panel for everyone. You can test admin future only by setting up your own app.
+
 ## Features
 
 - **Gallery** — browse all fonts by category or tag, with live rendering of each typeface
@@ -41,7 +44,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 > [!NOTE]
-> The seed script creates the admin account using `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` from `.env` (defaults: `admin@example.com` / `changeme123`). Change these before running the seed in any shared environment.
+> The seed script creates the admin account using `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` from `.env` (defaults: `admin@example.com` / `change-me-before-seed`). Change these before running the seed in any shared environment.
 
 ## Environment variables
 
@@ -62,6 +65,8 @@ Navigate to `/admin/login` and sign in with the admin credentials. From there yo
 - **Tag fonts** — inline tag editor with autocomplete suggestions
 - **Toggle visibility** — mark fonts active or inactive without deleting them
 - **Delete** — hover a row to reveal the delete button
+
+![admin_panel](public/images/admin_panel.png)
 
 ## Architecture
 
