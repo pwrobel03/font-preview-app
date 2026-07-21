@@ -27,6 +27,10 @@ COPY --from=builder /app/.next/static ./.next/static
 # Copy Prisma schema to run migrations
 COPY --from=builder /app/prisma ./prisma
 
+COPY --from=builder /app/lib ./lib
+COPY --from=builder /app/types ./types
+COPY --from=builder /app/tsconfig.json ./
+
 # Dependencies required to run migrations and seeding at runtime
 RUN npm install -g prisma tsx && npm install @prisma/client
 
