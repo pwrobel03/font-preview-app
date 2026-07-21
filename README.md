@@ -6,12 +6,12 @@ An internal tool for browsing, comparing, and managing typefaces — built with 
 
 <table>
   <tr>
-    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/preview.png" alt="Preview" width="400"/></td>
-    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/gallery.png" alt="Gallery view" width="400"/></td>
+    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/preview.png" alt="Preview" height="300"/></td>
+    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/gallery.png" alt="Gallery view" height="300"/></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/compare.png" alt="Compare view" width="400"/></td>
-    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/playground.png" alt="Playground view" width="400"/></td>
+    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/compare.png" alt="Compare view" height="300"/></td>
+    <td><img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/playground.png" alt="Playground view" height="300"/></td>
   </tr>
 </table>
 
