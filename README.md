@@ -23,7 +23,7 @@ An internal tool for browsing, comparing, and managing typefaces — built with 
 
 ```bash
 # 1. Clone and install
-git clone <repo-url>
+git clone https://github.com/pwrobel03/font-preview-app
 cd font-preview-app
 npm install
 
@@ -66,7 +66,7 @@ Navigate to `/admin/login` and sign in with the admin credentials. From there yo
 - **Toggle visibility** — mark fonts active or inactive without deleting them
 - **Delete** — hover a row to reveal the delete button
 
-![admin_panel](public/images/admin_panel.png)
+![admin_panel](https://github.com/pwrobel03/font-preview-app/public/images/admin_panel.png)
 
 ## Architecture
 
