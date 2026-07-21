@@ -16,6 +16,7 @@ export interface FontRecord {
   googleName: string | null;
   filePath: string | null;
   category: FontCategory;
+  subsets: string[];
   isActive: boolean;
 }
 
@@ -25,4 +26,14 @@ export const CATEGORY_LABELS: Record<FontCategory, string> = {
   MONOSPACE: "Monospace",
   DISPLAY: "Display",
   HANDWRITING: "Handwriting",
+};
+
+export const SUBSET_LABELS: Record<string, string> = {
+  latin: "Latin",
+  "latin-ext": "Latin Extended",
+  cyrillic: "Cyrillic",
+  "cyrillic-ext": "Cyrillic Ext.",
+  greek: "Greek",
+  vietnamese: "Vietnamese",
+  devanagari: "Devanagari",
 };

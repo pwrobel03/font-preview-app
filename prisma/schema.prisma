@@ -64,18 +64,19 @@ model VerificationToken {
 }
 
 model Font {
-  id          String      @id @default(cuid())
-  name        String                        // Display name, e.g. "Playfair Display"
-  slug        String      @unique           // URL-safe, e.g. "playfair-display"
-  source      FontSource  @default(GOOGLE)
-  familyCss   String      @map("family_css") // Value for font-family CSS, e.g. "'Playfair Display', serif"
-  googleName  String?     @map("google_name") // Exact name in Google Fonts API
-  filePath    String?     @map("file_path")   // /public/fonts/xxx.woff2 for local fonts
+  id          String       @id @default(cuid())
+  name        String                          // Display name, e.g. "Playfair Display"
+  slug        String       @unique            // URL-safe, e.g. "playfair-display"
+  source      FontSource   @default(GOOGLE)
+  familyCss   String       @map("family_css") // Value for font-family CSS
+  googleName  String?      @map("google_name") // Exact name in Google Fonts API
+  filePath    String?      @map("file_path")   // /public/fonts/xxx.woff2 for local fonts
   category    FontCategory @default(SANS_SERIF)
-  isActive    Boolean     @default(true) @map("is_active")
-  addedBy     String?     @map("added_by")
-  addedByUser User?       @relation(fields: [addedBy], references: [id], onDelete: SetNull)
-  createdAt   DateTime    @default(now()) @map("created_at")
+  subsets     String[]     @default(["latin"]) // e.g. ["latin","latin-ext","cyrillic"]
+  isActive    Boolean      @default(true) @map("is_active")
+  addedBy     String?      @map("added_by")
+  addedByUser User?        @relation(fields: [addedBy], references: [id], onDelete: SetNull)
+  createdAt   DateTime     @default(now()) @map("created_at")
 
   @@map("fonts")
 }

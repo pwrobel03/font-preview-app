@@ -1,8 +1,16 @@
 /**
  * Master list of fonts available in the app.
  * All are Google Fonts — loaded at runtime via @font-face injection.
- * When a font is added through the admin panel it is appended to the DB;
- * this file is only used by the seed script to pre-populate the DB.
+ * This file is used by the seed script to pre-populate the DB.
+ *
+ * subsets reference:
+ *   latin        — English + basic Western European
+ *   latin-ext    — Extended Latin: Polish, Czech, Romanian, etc.
+ *   cyrillic     — Russian, Bulgarian, Serbian, etc.
+ *   cyrillic-ext — Extended Cyrillic
+ *   greek        — Modern Greek
+ *   vietnamese   — Vietnamese
+ *   devanagari   — Hindi, Marathi, etc.
  */
 
 import type { FontCategory } from "@/types";
@@ -13,16 +21,18 @@ export interface FontSeedEntry {
   googleName: string;
   familyCss: string;
   category: FontCategory;
+  subsets: string[];
 }
 
 export const FONTS_SEED: FontSeedEntry[] = [
-  // --- SERIF ---
+  // ─── SERIF ────────────────────────────────────────────────────────────────
   {
     name: "Playfair Display",
     slug: "playfair-display",
     googleName: "Playfair+Display",
     familyCss: "'Playfair Display', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "vietnamese"],
   },
   {
     name: "Merriweather",
@@ -30,6 +40,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Merriweather",
     familyCss: "'Merriweather', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "vietnamese"],
   },
   {
     name: "Lora",
@@ -37,6 +48,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Lora",
     familyCss: "'Lora', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "vietnamese"],
   },
   {
     name: "PT Serif",
@@ -44,6 +56,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "PT+Serif",
     familyCss: "'PT Serif', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic"],
   },
   {
     name: "Libre Baskerville",
@@ -51,6 +64,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Libre+Baskerville",
     familyCss: "'Libre Baskerville', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "EB Garamond",
@@ -58,6 +72,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "EB+Garamond",
     familyCss: "'EB Garamond', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "greek", "vietnamese"],
   },
   {
     name: "Cormorant Garamond",
@@ -65,6 +80,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Cormorant+Garamond",
     familyCss: "'Cormorant Garamond', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "vietnamese"],
   },
   {
     name: "Crimson Text",
@@ -72,6 +88,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Crimson+Text",
     familyCss: "'Crimson Text', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "Source Serif 4",
@@ -79,15 +96,17 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Source+Serif+4",
     familyCss: "'Source Serif 4', serif",
     category: "SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "greek", "vietnamese"],
   },
 
-  // --- SANS-SERIF ---
+  // ─── SANS-SERIF ───────────────────────────────────────────────────────────
   {
     name: "Inter",
     slug: "inter",
     googleName: "Inter",
     familyCss: "'Inter', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext", "greek", "vietnamese"],
   },
   {
     name: "DM Sans",
@@ -95,6 +114,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "DM+Sans",
     familyCss: "'DM Sans', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "Outfit",
@@ -102,6 +122,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Outfit",
     familyCss: "'Outfit', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin"],
   },
   {
     name: "Plus Jakarta Sans",
@@ -109,6 +130,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Plus+Jakarta+Sans",
     familyCss: "'Plus Jakarta Sans', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "Nunito",
@@ -116,6 +138,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Nunito",
     familyCss: "'Nunito', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "vietnamese"],
   },
   {
     name: "Poppins",
@@ -123,6 +146,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Poppins",
     familyCss: "'Poppins', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "devanagari"],
   },
   {
     name: "Raleway",
@@ -130,6 +154,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Raleway",
     familyCss: "'Raleway', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic"],
   },
   {
     name: "Mulish",
@@ -137,6 +162,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Mulish",
     familyCss: "'Mulish', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "vietnamese"],
   },
   {
     name: "Manrope",
@@ -144,6 +170,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Manrope",
     familyCss: "'Manrope', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic", "greek"],
   },
   {
     name: "Work Sans",
@@ -151,6 +178,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Work+Sans",
     familyCss: "'Work Sans', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "vietnamese"],
   },
   {
     name: "Jost",
@@ -158,6 +186,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Jost",
     familyCss: "'Jost', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "cyrillic"],
   },
   {
     name: "Barlow",
@@ -165,6 +194,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Barlow",
     familyCss: "'Barlow', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext", "vietnamese"],
   },
   {
     name: "Karla",
@@ -172,6 +202,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Karla",
     familyCss: "'Karla', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "Figtree",
@@ -179,15 +210,17 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Figtree",
     familyCss: "'Figtree', sans-serif",
     category: "SANS_SERIF",
+    subsets: ["latin", "latin-ext"],
   },
 
-  // --- MONOSPACE ---
+  // ─── MONOSPACE ────────────────────────────────────────────────────────────
   {
     name: "JetBrains Mono",
     slug: "jetbrains-mono",
     googleName: "JetBrains+Mono",
     familyCss: "'JetBrains Mono', monospace",
     category: "MONOSPACE",
+    subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext", "greek"],
   },
   {
     name: "Fira Code",
@@ -195,6 +228,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Fira+Code",
     familyCss: "'Fira Code', monospace",
     category: "MONOSPACE",
+    subsets: ["latin", "latin-ext", "cyrillic", "greek"],
   },
   {
     name: "IBM Plex Mono",
@@ -202,6 +236,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "IBM+Plex+Mono",
     familyCss: "'IBM Plex Mono', monospace",
     category: "MONOSPACE",
+    subsets: ["latin", "latin-ext", "cyrillic"],
   },
   {
     name: "Source Code Pro",
@@ -209,15 +244,17 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Source+Code+Pro",
     familyCss: "'Source Code Pro', monospace",
     category: "MONOSPACE",
+    subsets: ["latin", "latin-ext", "greek", "vietnamese"],
   },
 
-  // --- DISPLAY ---
+  // ─── DISPLAY ──────────────────────────────────────────────────────────────
   {
     name: "Syne",
     slug: "syne",
     googleName: "Syne",
     familyCss: "'Syne', sans-serif",
     category: "DISPLAY",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "Space Grotesk",
@@ -225,13 +262,15 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Space+Grotesk",
     familyCss: "'Space Grotesk', sans-serif",
     category: "DISPLAY",
+    subsets: ["latin", "latin-ext", "vietnamese"],
   },
   {
-    name: "Clash Display",
-    slug: "clash-display",
-    googleName: "Clash+Display",
-    familyCss: "'Clash Display', sans-serif",
+    name: "Russo One",
+    slug: "russo-one",
+    googleName: "Russo+One",
+    familyCss: "'Russo One', sans-serif",
     category: "DISPLAY",
+    subsets: ["latin", "cyrillic"],
   },
   {
     name: "Bebas Neue",
@@ -239,6 +278,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Bebas+Neue",
     familyCss: "'Bebas Neue', cursive",
     category: "DISPLAY",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "Anton",
@@ -246,6 +286,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Anton",
     familyCss: "'Anton', sans-serif",
     category: "DISPLAY",
+    subsets: ["latin", "latin-ext", "vietnamese"],
   },
   {
     name: "Righteous",
@@ -253,6 +294,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Righteous",
     familyCss: "'Righteous', cursive",
     category: "DISPLAY",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "Oswald",
@@ -260,15 +302,17 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Oswald",
     familyCss: "'Oswald', sans-serif",
     category: "DISPLAY",
+    subsets: ["latin", "latin-ext", "cyrillic", "vietnamese"],
   },
 
-  // --- HANDWRITING ---
+  // ─── HANDWRITING ─────────────────────────────────────────────────────────
   {
     name: "Dancing Script",
     slug: "dancing-script",
     googleName: "Dancing+Script",
     familyCss: "'Dancing Script', cursive",
     category: "HANDWRITING",
+    subsets: ["latin", "latin-ext", "vietnamese"],
   },
   {
     name: "Pacifico",
@@ -276,6 +320,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Pacifico",
     familyCss: "'Pacifico', cursive",
     category: "HANDWRITING",
+    subsets: ["latin", "cyrillic", "vietnamese"],
   },
   {
     name: "Caveat",
@@ -283,6 +328,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Caveat",
     familyCss: "'Caveat', cursive",
     category: "HANDWRITING",
+    subsets: ["latin", "latin-ext", "cyrillic"],
   },
   {
     name: "Great Vibes",
@@ -290,6 +336,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Great+Vibes",
     familyCss: "'Great Vibes', cursive",
     category: "HANDWRITING",
+    subsets: ["latin", "latin-ext"],
   },
   {
     name: "Satisfy",
@@ -297,6 +344,7 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Satisfy",
     familyCss: "'Satisfy', cursive",
     category: "HANDWRITING",
+    subsets: ["latin"],
   },
   {
     name: "Permanent Marker",
@@ -304,5 +352,6 @@ export const FONTS_SEED: FontSeedEntry[] = [
     googleName: "Permanent+Marker",
     familyCss: "'Permanent Marker', cursive",
     category: "HANDWRITING",
+    subsets: ["latin"],
   },
 ];
