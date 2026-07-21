@@ -66,7 +66,7 @@ Navigate to `/admin/login` and sign in with the admin credentials. From there yo
 - **Toggle visibility** — mark fonts active or inactive without deleting them
 - **Delete** — hover a row to reveal the delete button
 
-![admin_panel](https://github.com/pwrobel03/font-preview-app/public/images/admin_panel.png)
+![admin_panel](https://github.com/pwrobel03/font-preview-app/blob/main/public/images/admin_panel.png)
 
 ## Architecture
 
