@@ -98,6 +98,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `A font with slug "${slug}" already exists.` }, { status: 409 });
   }
 
+  // Resolve addedBy via email lookup — avoids FK violation if the JWT token
+  // carries a stale user ID (e.g. after a DB reset with new auto-generated IDs)
+  let addedById: string | null = null;
+  if (session.user?.email) {
+    const dbUser = await prisma.user.findUnique({ where: { email: session.user.email } });
+    addedById = dbUser?.id ?? null;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const font = await (prisma.font as any).create({
     data: {
@@ -111,7 +119,7 @@ export async function POST(req: NextRequest) {
       subsets: subsets?.length ? subsets : ["latin"],
       tags: tags ?? [],
       isActive: true,
-      addedBy: session.user?.id ?? null,
+      addedBy: addedById,
     },
   });
 
