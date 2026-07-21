@@ -19,6 +19,7 @@ const CATEGORY_COLORS: Record<FontCategory, string> = {
 export default function GalleryPage() {
   const [fonts, setFonts] = useState<FontRecord[]>([]);
   const [activeCategory, setActiveCategory] = useState<FontCategory | "ALL">("ALL");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,18 +28,20 @@ export default function GalleryPage() {
       .then((data: FontRecord[]) => {
         setFonts(data);
         setLoading(false);
-        // Preload all fonts for the gallery
-        data.forEach((f) => {
-          loadFont(f);
-        });
+        data.forEach((f) => { loadFont(f); });
       });
   }, []);
 
   const categories = ["ALL", ...Object.keys(CATEGORY_LABELS)] as (FontCategory | "ALL")[];
 
-  const filtered = activeCategory === "ALL"
-    ? fonts
-    : fonts.filter((f) => f.category === activeCategory);
+  // All unique tags across all fonts, sorted
+  const allTags = Array.from(new Set(fonts.flatMap((f) => f.tags ?? []))).sort();
+
+  const filtered = fonts.filter((f) => {
+    if (activeCategory !== "ALL" && f.category !== activeCategory) return false;
+    if (activeTag && !(f.tags ?? []).includes(activeTag)) return false;
+    return true;
+  });
 
   if (loading) {
     return (
@@ -58,27 +61,49 @@ export default function GalleryPage() {
     <>
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div className="border-b border-border bg-surface-subtle sticky top-12 z-30">
-        <div className="max-w-screen-xl mx-auto px-6 sm:px-10 py-5 flex flex-wrap items-center gap-3">
-          <div className="flex-1">
-            <h1 className="text-lg font-semibold text-ink">Font Gallery</h1>
-            <p className="text-sm text-ink-muted">{filtered.length} of {fonts.length} fonts</p>
+        <div className="max-w-screen-xl mx-auto px-6 sm:px-10 py-4 space-y-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex-1">
+              <h1 className="text-lg font-semibold text-ink">Font Gallery</h1>
+              <p className="text-sm text-ink-muted">{filtered.length} of {fonts.length} fonts</p>
+            </div>
+            {/* Category filters */}
+            <div className="flex flex-wrap gap-1.5">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`h-8 px-3 rounded-full text-xs font-medium transition-colors ${
+                    activeCategory === cat
+                      ? "bg-ink text-surface"
+                      : "bg-surface border border-border text-ink-muted hover:text-ink hover:border-ink/30"
+                  }`}
+                >
+                  {cat === "ALL" ? "All" : CATEGORY_LABELS[cat as FontCategory]}
+                </button>
+              ))}
+            </div>
           </div>
-          {/* Category filters */}
-          <div className="flex flex-wrap gap-1.5">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`h-8 px-3 rounded-full text-xs font-medium transition-colors ${
-                  activeCategory === cat
-                    ? "bg-ink text-surface"
-                    : "bg-surface border border-border text-ink-muted hover:text-ink hover:border-ink/30"
-                }`}
-              >
-                {cat === "ALL" ? "All" : CATEGORY_LABELS[cat as FontCategory]}
-              </button>
-            ))}
-          </div>
+
+          {/* Tag filters — only shown when any font has tags */}
+          {allTags.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 pb-1">
+              <span className="text-xs text-ink-muted font-sans mr-1">Tags:</span>
+              {allTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                  className={`h-6 px-2.5 rounded-full text-xs font-medium transition-colors ${
+                    activeTag === tag
+                      ? "bg-accent text-white"
+                      : "bg-accent/10 text-accent border border-accent/20 hover:bg-accent/20"
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -115,6 +140,25 @@ export default function GalleryPage() {
               >
                 {SAMPLE}
               </p>
+
+              {/* Tags */}
+              {(font.tags ?? []).length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {(font.tags ?? []).slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-1.5 py-0.5 rounded text-[10px] bg-accent/10 text-accent"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {(font.tags ?? []).length > 3 && (
+                    <span className="px-1.5 py-0.5 rounded text-[10px] text-ink-muted">
+                      +{(font.tags ?? []).length - 3}
+                    </span>
+                  )}
+                </div>
+              )}
 
               {/* Footer */}
               <div className="flex items-center justify-between gap-2">

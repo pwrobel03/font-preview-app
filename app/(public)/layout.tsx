@@ -56,6 +56,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     { href: "/", label: "Preview" },
     { href: "/gallery", label: "Gallery" },
     { href: "/compare", label: "Compare" },
+    { href: "/playground", label: "Playground" },
   ];
 
   return (

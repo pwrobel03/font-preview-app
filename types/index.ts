@@ -17,6 +17,7 @@ export interface FontRecord {
   filePath: string | null;
   category: FontCategory;
   subsets: string[];
+  tags: string[];
   isActive: boolean;
 }
 
@@ -27,6 +28,12 @@ export const CATEGORY_LABELS: Record<FontCategory, string> = {
   DISPLAY: "Display",
   HANDWRITING: "Handwriting",
 };
+
+export const SUGGESTED_TAGS = [
+  "elegant", "modern", "classic", "playful", "minimal",
+  "editorial", "technical", "friendly", "bold", "geometric",
+  "humanist", "condensed", "display", "readable", "expressive",
+] as const;
 
 export const SUBSET_LABELS: Record<string, string> = {
   latin: "Latin",

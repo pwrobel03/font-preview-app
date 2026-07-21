@@ -30,7 +30,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const fonts = await prisma.font.findMany({
+  const rawFonts = await prisma.font.findMany({
     orderBy: { name: "asc" },
     select: {
       id: true,
@@ -47,6 +47,10 @@ export async function GET() {
     },
   });
 
+  // tags column added in migration — guard for envs where it hasn't run yet
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const fonts = rawFonts.map((f) => ({ ...f, tags: (f as any).tags ?? [] }));
+
   return NextResponse.json(fonts);
 }
 
@@ -58,13 +62,14 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { name, googleName, filePath, source = "GOOGLE", category, subsets } = body as {
+  const { name, googleName, filePath, source = "GOOGLE", category, subsets, tags } = body as {
     name: string;
     googleName?: string;
     filePath?: string;
     source?: "GOOGLE" | "LOCAL";
     category: FontCategory;
     subsets: string[];
+    tags?: string[];
   };
 
   if (!name?.trim() || !category) {
@@ -91,7 +96,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `A font with slug "${slug}" already exists.` }, { status: 409 });
   }
 
-  const font = await prisma.font.create({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const font = await (prisma.font as any).create({
     data: {
       name: name.trim(),
       slug,
@@ -101,6 +107,7 @@ export async function POST(req: NextRequest) {
       filePath: filePath ?? null,
       category,
       subsets: subsets?.length ? subsets : ["latin"],
+      tags: tags ?? [],
       isActive: true,
       addedBy: session.user?.id ?? null,
     },

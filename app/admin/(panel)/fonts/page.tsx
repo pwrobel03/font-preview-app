@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { CATEGORY_LABELS, SUBSET_LABELS } from "@/types";
+import { CATEGORY_LABELS, SUBSET_LABELS, SUGGESTED_TAGS } from "@/types";
 import type { FontRecord, FontCategory } from "@/types";
 
 /* ── Types ────────────────────────────────────────────────────────────── */
@@ -40,6 +40,135 @@ function Toggle({ active, onChange }: { active: boolean; onChange: (v: boolean) 
                     transition-transform ${active ? "translate-x-4" : "translate-x-0"}`}
       />
     </button>
+  );
+}
+
+/* ── Inline tag editor ────────────────────────────────────────────────── */
+function TagEditor({ fontId, initialTags, onSave }: {
+  fontId: string;
+  initialTags: string[];
+  onSave: (tags: string[]) => void;
+}) {
+  const [tags, setTags] = useState<string[]>(initialTags);
+  const [input, setInput] = useState("");
+  const [saving, setSaving] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  async function save(nextTags: string[]) {
+    setSaving(true);
+    await fetch(`/api/admin/fonts/${fontId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tags: nextTags }),
+    });
+    setSaving(false);
+    onSave(nextTags);
+  }
+
+  function addTag(tag: string) {
+    const t = tag.toLowerCase().trim().replace(/\s+/g, "-");
+    if (!t || tags.includes(t)) return;
+    const next = [...tags, t];
+    setTags(next);
+    save(next);
+    setInput("");
+  }
+
+  function removeTag(tag: string) {
+    const next = tags.filter((t) => t !== tag);
+    setTags(next);
+    save(next);
+  }
+
+  function handleKey(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addTag(input);
+    }
+  }
+
+  const suggestions = SUGGESTED_TAGS.filter(
+    (s) => !tags.includes(s) && s.includes(input.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-2">
+      {/* Current tags */}
+      <div className="flex flex-wrap gap-1 min-h-[24px]">
+        {tags.map((t) => (
+          <span
+            key={t}
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs
+                       bg-accent/10 text-accent border border-accent/20"
+          >
+            {t}
+            <button
+              type="button"
+              onClick={() => removeTag(t)}
+              className="hover:text-red-500 transition-colors leading-none"
+            >
+              ×
+            </button>
+          </span>
+        ))}
+        {saving && (
+          <svg className="animate-spin text-ink-muted self-center" width="10" height="10"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+          </svg>
+        )}
+      </div>
+
+      {/* Input */}
+      <div className="relative">
+        <input
+          ref={inputRef}
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder="Add tag…"
+          className="w-full h-7 px-2 text-xs rounded border border-border bg-surface text-ink
+                     focus:outline-none focus:ring-1 focus:ring-accent/40 focus:border-accent/40
+                     placeholder:text-ink-muted"
+        />
+
+        {/* Suggestions dropdown */}
+        {input && suggestions.length > 0 && (
+          <div className="absolute top-full left-0 mt-1 z-20 bg-surface border border-border
+                          rounded-md shadow-md py-1 min-w-[140px]">
+            {suggestions.slice(0, 6).map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => addTag(s)}
+                className="w-full text-left px-3 py-1 text-xs text-ink hover:bg-surface-subtle
+                           transition-colors"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Quick-add suggested tags not yet applied */}
+      {tags.length === 0 && !input && (
+        <div className="flex flex-wrap gap-1">
+          {SUGGESTED_TAGS.slice(0, 5).map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => addTag(s)}
+              className="px-2 py-0.5 rounded-full text-xs border border-dashed border-border
+                         text-ink-muted hover:border-accent/40 hover:text-accent transition-colors"
+            >
+              + {s}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -438,7 +567,8 @@ export default function AdminFontsPage() {
                 <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide">Font</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden sm:table-cell">Category</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden md:table-cell">Subsets</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden lg:table-cell">Source</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden lg:table-cell">Tags</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden xl:table-cell">Source</th>
                 <th className="text-center px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide">Active</th>
                 <th className="px-4 py-3" />
               </tr>
@@ -446,7 +576,7 @@ export default function AdminFontsPage() {
             <tbody className="divide-y divide-border">
               {visible.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-sm text-ink-muted">
+                  <td colSpan={7} className="px-4 py-10 text-center text-sm text-ink-muted">
                     No fonts match your filters.
                   </td>
                 </tr>
@@ -490,8 +620,21 @@ export default function AdminFontsPage() {
                       </div>
                     </td>
 
+                    {/* Tags */}
+                    <td className="px-4 py-3 hidden lg:table-cell" style={{ minWidth: 200 }}>
+                      <TagEditor
+                        fontId={font.id}
+                        initialTags={font.tags}
+                        onSave={(tags) =>
+                          setFonts((prev) =>
+                            prev.map((f) => f.id === font.id ? { ...f, tags } : f)
+                          )
+                        }
+                      />
+                    </td>
+
                     {/* Source */}
-                    <td className="px-4 py-3 hidden lg:table-cell">
+                    <td className="px-4 py-3 hidden xl:table-cell">
                       {font.source === "GOOGLE" ? (
                         <span className="inline-flex items-center gap-1 text-xs text-ink-muted font-sans">
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">

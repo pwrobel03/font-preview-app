@@ -73,6 +73,7 @@ model Font {
   filePath    String?      @map("file_path")   // /public/fonts/xxx.woff2 for local fonts
   category    FontCategory @default(SANS_SERIF)
   subsets     String[]     @default(["latin"]) // e.g. ["latin","latin-ext","cyrillic"]
+  tags        String[]     @default([])        // e.g. ["elegant","editorial","headings"]
   isActive    Boolean      @default(true) @map("is_active")
   addedBy     String?      @map("added_by")
   addedByUser User?        @relation(fields: [addedBy], references: [id], onDelete: SetNull)
