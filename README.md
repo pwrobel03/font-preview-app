@@ -4,7 +4,7 @@
 
 An internal tool for browsing, comparing, and managing typefaces — built with Next.js, Prisma, and Tailwind CSS.
 
-<img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/compare.png" alt="Compare view" width="96%"/>
+<img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/compare.png" alt="Compare view" width="100%"/>
 
 <p align="center">
   <img src="https://github.com/pwrobel03/font-preview-app/blob/main/public/images/preview.png" alt="Preview" width="32%">
