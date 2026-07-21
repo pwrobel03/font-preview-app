@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 // PATCH /api/admin/fonts/[id] — toggle isActive or update fields
 export async function PATCH(
   req: NextRequest,

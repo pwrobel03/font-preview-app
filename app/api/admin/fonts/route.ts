@@ -3,6 +3,8 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import type { FontCategory } from "@/types";
 
+export const dynamic = "force-dynamic";
+
 function slugify(name: string) {
   return name
     .toLowerCase()

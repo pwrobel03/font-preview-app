@@ -3,6 +3,8 @@ import { auth } from "@/auth";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
+export const dynamic = "force-dynamic";
+
 const ALLOWED_EXTS = [".woff2", ".woff", ".ttf", ".otf"];
 const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 
