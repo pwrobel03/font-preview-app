@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { FontRecord, FontCategory } from "@/types";
 import { CATEGORY_LABELS } from "@/types";
+import { loadGoogleFont } from "@/lib/font-loader";
 
 interface Props {
   fonts: FontRecord[];
@@ -18,6 +19,7 @@ export default function FontSelector({ fonts, value, onChange, label, dark = fal
   const [activeCategory, setActiveCategory] = useState<FontCategory | "ALL">("ALL");
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const fontsPreloaded = useRef(false);
 
   useEffect(() => {
     function handle(e: MouseEvent) {
@@ -31,8 +33,19 @@ export default function FontSelector({ fonts, value, onChange, label, dark = fal
   }, []);
 
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 10);
-  }, [open]);
+    if (open) {
+      setTimeout(() => inputRef.current?.focus(), 10);
+      // Load all Google Fonts on first open so names render in their own typeface
+      if (!fontsPreloaded.current) {
+        fontsPreloaded.current = true;
+        fonts.forEach((f) => {
+          if (f.source === "GOOGLE" && f.googleName) {
+            loadGoogleFont(f.googleName);
+          }
+        });
+      }
+    }
+  }, [open, fonts]);
 
   const categories = ["ALL", ...Object.keys(CATEGORY_LABELS)] as (FontCategory | "ALL")[];
 
@@ -124,7 +137,7 @@ export default function FontSelector({ fonts, value, onChange, label, dark = fal
           </div>
 
           {/* Font list */}
-          <ul className="max-h-56 overflow-y-auto py-1">
+          <ul className="max-h-72 overflow-y-auto py-1">
             {filtered.length === 0 ? (
               <li className="px-3 py-3 text-sm text-ink-muted text-center">
                 No fonts match your search
@@ -137,21 +150,37 @@ export default function FontSelector({ fonts, value, onChange, label, dark = fal
                     <button
                       type="button"
                       onClick={() => { onChange(font); setOpen(false); setQuery(""); }}
-                      className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2
+                      className={`w-full text-left px-3 py-2.5 flex items-center gap-2
                                   hover:bg-surface-subtle transition-colors ${
-                                    isActive ? "text-accent" : "text-ink"
+                                    isActive ? "bg-surface-subtle" : ""
                                   }`}
                     >
-                      {isActive && (
-                        <svg className="shrink-0" width="12" height="12" viewBox="0 0 24 24"
-                          fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M20 6 9 17l-5-5"/>
-                        </svg>
-                      )}
-                      <span className={`flex-1 ${isActive ? "" : "pl-[20px]"}`}>
+                      {/* Checkmark for active */}
+                      <span className="w-4 shrink-0 flex items-center justify-center">
+                        {isActive && (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" strokeWidth="2.5" className="text-accent">
+                            <path d="M20 6 9 17l-5-5"/>
+                          </svg>
+                        )}
+                      </span>
+
+                      {/* Font name rendered in its own typeface */}
+                      <span
+                        className="flex-1 truncate"
+                        style={{
+                          fontFamily: font.familyCss,
+                          fontSize: "15px",
+                          color: isActive
+                            ? "var(--color-accent)"
+                            : "var(--color-ink)",
+                        }}
+                      >
                         {font.name}
                       </span>
-                      <span className="text-[10px] text-ink-muted shrink-0">
+
+                      {/* Category label in system font */}
+                      <span className="text-[10px] text-ink-muted shrink-0 font-sans">
                         {CATEGORY_LABELS[font.category]}
                       </span>
                     </button>

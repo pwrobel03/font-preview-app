@@ -8,9 +8,10 @@ import type { FontRecord } from "@/types";
 interface Props {
   font: FontRecord;
   baseSizePx?: number;
+  compact?: boolean;
 }
 
-export default function FontPreview({ font, baseSizePx = 16 }: Props) {
+export default function FontPreview({ font, baseSizePx = 16, compact = false }: Props) {
   useEffect(() => {
     if (font.source === "GOOGLE" && font.googleName) {
       loadGoogleFont(font.googleName);
@@ -109,7 +110,7 @@ export default function FontPreview({ font, baseSizePx = 16 }: Props) {
             <div className="w-16 h-0.5 bg-slate-300 dark:bg-border mx-auto" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className={`grid gap-6 ${compact ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"}`}>
             {CARDS.map((card) => (
               <article
                 key={card.id}
