@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: fontpreview_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: change_me_strong_password
+      POSTGRES_DB: fontpreview
+    volumes:
+      - fontpreview_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    container_name: fontpreview_app
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://admin:change_me_strong_password@db:5432/fontpreview?schema=public"
+      NEXTAUTH_URL: "http://localhost:3000"
+      NEXTAUTH_SECRET: "development-secret-key-do-not-use-in-prod"
+      SEED_ADMIN_EMAIL: "admin@example.com"
+      SEED_ADMIN_PASSWORD: "change-me-before-seed"
+    volumes:
+      # Keeping uploaded local fonts
+      - fontpreview_fonts:/app/public/fonts
+
+volumes:
+  fontpreview_db_data:
+  fontpreview_fonts:

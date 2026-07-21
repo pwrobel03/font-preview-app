@@ -27,6 +27,37 @@ An internal tool for browsing, comparing, and managing typefaces — built with 
 
 ## Getting started
 
+You can run this project using Docker (recommended for a quick start) or by setting it up manually.
+
+### Option 1: Docker (Recommended)
+
+The easiest way to run FontPreview locally is using Docker Compose. It automatically provisions the PostgreSQL database, runs migrations, seeds the default fonts, and starts the Next.js app.
+
+**Prerequisites:** Docker & Docker Compose
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/pwrobel03/font-preview-app
+cd font-preview-app
+
+# 2. Start the application
+docker compose up -d
+```
+
+Once started, you can access the app at [http://localhost:3000](http://localhost:3000).
+
+**Stopping the app:**
+```bash
+docker compose down
+```
+
+> [!NOTE]
+> The Docker setup automatically creates the admin account using the following default credentials:
+Email: admin@example.com
+Password: change-me-before-seed
+
+### Option 2: Manual Setup
+
 **Prerequisites:** Node.js 18+, PostgreSQL
 
 ```bash
@@ -51,8 +82,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-> [!NOTE]
-> The seed script creates the admin account using `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` from `.env` (defaults: `admin@example.com` / `change-me-before-seed`). Change these before running the seed in any shared environment.
+> [!IMPORTANT]
+> When running manually, **always change the default credentials** in `.env` before running the seed.
 
 ## Environment variables
 
