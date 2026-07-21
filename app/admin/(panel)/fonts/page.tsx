@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { CATEGORY_LABELS, SUBSET_LABELS } from "@/types";
 import type { FontRecord, FontCategory } from "@/types";
 
@@ -12,15 +12,18 @@ interface AdminFont extends FontRecord {
 const ALL_SUBSETS = Object.keys(SUBSET_LABELS);
 const ALL_CATEGORIES = Object.keys(CATEGORY_LABELS) as FontCategory[];
 
-/* ── Add font form state ──────────────────────────────────────────────── */
+type FontSource = "GOOGLE" | "LOCAL";
+
+/* ── Form defaults ────────────────────────────────────────────────────── */
 const EMPTY_FORM = {
+  source: "GOOGLE" as FontSource,
   name: "",
   googleName: "",
   category: "SANS_SERIF" as FontCategory,
   subsets: ["latin"] as string[],
 };
 
-/* ── Toggle switch ────────────────────────────────────────────────────── */
+/* ── Small components ─────────────────────────────────────────────────── */
 function Toggle({ active, onChange }: { active: boolean; onChange: (v: boolean) => void }) {
   return (
     <button
@@ -40,7 +43,6 @@ function Toggle({ active, onChange }: { active: boolean; onChange: (v: boolean) 
   );
 }
 
-/* ── Category badge ───────────────────────────────────────────────────── */
 const CAT_COLORS: Record<FontCategory, string> = {
   SERIF:       "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
   SANS_SERIF:  "bg-slate-100 text-slate-600 dark:bg-slate-700/40 dark:text-slate-300",
@@ -57,10 +59,13 @@ export default function AdminFontsPage() {
   const [filterStatus, setFilterStatus] = useState<"all" | "active" | "inactive">("all");
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchFonts = useCallback(async () => {
     const res = await fetch("/api/admin/fonts");
@@ -98,12 +103,47 @@ export default function AdminFontsPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormError("");
+
+    if (!form.name.trim()) { setFormError("Display name is required."); return; }
+    if (form.source === "LOCAL" && !uploadFile) {
+      setFormError("Please select a font file (.woff2, .woff, .ttf, .otf)."); return;
+    }
+
     setSubmitting(true);
 
+    let filePath: string | undefined;
+
+    // Step 1: upload file if LOCAL
+    if (form.source === "LOCAL" && uploadFile) {
+      setUploading(true);
+      const fd = new FormData();
+      fd.append("file", uploadFile);
+      const uploadRes = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const uploadData = await uploadRes.json();
+      setUploading(false);
+
+      if (!uploadRes.ok) {
+        setFormError(uploadData.error ?? "Upload failed.");
+        setSubmitting(false);
+        return;
+      }
+      filePath = uploadData.filePath;
+    }
+
+    // Step 2: create font record
     const res = await fetch("/api/admin/fonts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({
+        source: form.source,
+        name: form.name.trim(),
+        googleName: form.source === "GOOGLE"
+          ? (form.googleName.trim() || form.name.trim())
+          : undefined,
+        filePath,
+        category: form.category,
+        subsets: form.subsets,
+      }),
     });
 
     const data = await res.json();
@@ -116,6 +156,16 @@ export default function AdminFontsPage() {
 
     setFonts((prev) => [...prev, data].sort((a, b) => a.name.localeCompare(b.name)));
     setForm(EMPTY_FORM);
+    setUploadFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setShowForm(false);
+  }
+
+  function resetForm() {
+    setForm(EMPTY_FORM);
+    setUploadFile(null);
+    setFormError("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
     setShowForm(false);
   }
 
@@ -130,7 +180,6 @@ export default function AdminFontsPage() {
   const activeCount = fonts.filter((f) => f.isActive).length;
   const inactiveCount = fonts.length - activeCount;
 
-  /* ── Render ── */
   return (
     <div className="space-y-6">
 
@@ -158,10 +207,32 @@ export default function AdminFontsPage() {
       {/* ── Add font form ── */}
       {showForm && (
         <div className="rounded-xl border border-border bg-surface-subtle p-6">
-          <h2 className="text-base font-semibold text-ink mb-5">Add Google Font</h2>
+
+          {/* Source toggle */}
+          <div className="flex items-center gap-1 mb-6 p-1 rounded-lg bg-surface border border-border w-fit">
+            {(["GOOGLE", "LOCAL"] as FontSource[]).map((src) => (
+              <button
+                key={src}
+                type="button"
+                onClick={() => {
+                  setForm((f) => ({ ...f, source: src }));
+                  setFormError("");
+                  setUploadFile(null);
+                }}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  form.source === src
+                    ? "bg-accent text-white shadow-sm"
+                    : "text-ink-muted hover:text-ink"
+                }`}
+              >
+                {src === "GOOGLE" ? "Google Fonts" : "Upload file"}
+              </button>
+            ))}
+          </div>
+
           <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-            {/* Name */}
+            {/* Display name */}
             <div>
               <label className="block text-sm font-medium text-ink mb-1.5" htmlFor="f-name">
                 Display name <span className="text-red-500">*</span>
@@ -170,7 +241,7 @@ export default function AdminFontsPage() {
                 id="f-name"
                 type="text"
                 required
-                placeholder="e.g. Playfair Display"
+                placeholder={form.source === "GOOGLE" ? "e.g. Playfair Display" : "e.g. My Custom Font"}
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                 className="w-full px-3 py-2 rounded-md border border-border bg-surface text-ink text-sm
@@ -178,22 +249,64 @@ export default function AdminFontsPage() {
               />
             </div>
 
-            {/* Google name */}
-            <div>
-              <label className="block text-sm font-medium text-ink mb-1.5" htmlFor="f-google">
-                Google Fonts name
-                <span className="ml-1.5 text-xs text-ink-muted font-normal">(if different from display name)</span>
-              </label>
-              <input
-                id="f-google"
-                type="text"
-                placeholder="Leave blank to use display name"
-                value={form.googleName}
-                onChange={(e) => setForm((f) => ({ ...f, googleName: e.target.value }))}
-                className="w-full px-3 py-2 rounded-md border border-border bg-surface text-ink text-sm
-                           focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40"
-              />
-            </div>
+            {/* Google name OR file upload */}
+            {form.source === "GOOGLE" ? (
+              <div>
+                <label className="block text-sm font-medium text-ink mb-1.5" htmlFor="f-google">
+                  Google Fonts name
+                  <span className="ml-1.5 text-xs text-ink-muted font-normal">(if different from display name)</span>
+                </label>
+                <input
+                  id="f-google"
+                  type="text"
+                  placeholder="Exact name from fonts.google.com"
+                  value={form.googleName}
+                  onChange={(e) => setForm((f) => ({ ...f, googleName: e.target.value }))}
+                  className="w-full px-3 py-2 rounded-md border border-border bg-surface text-ink text-sm
+                             focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent/40"
+                />
+                <p className="mt-1 text-xs text-ink-muted font-sans">
+                  Must match exactly as it appears on{" "}
+                  <a href="https://fonts.google.com" target="_blank" rel="noreferrer"
+                    className="underline hover:text-ink">fonts.google.com</a>
+                </p>
+              </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-medium text-ink mb-1.5">
+                  Font file <span className="text-red-500">*</span>
+                  <span className="ml-1.5 text-xs text-ink-muted font-normal">.woff2 · .woff · .ttf · .otf</span>
+                </label>
+                <div
+                  className={`flex items-center gap-3 px-3 py-2 rounded-md border bg-surface text-sm
+                               cursor-pointer hover:border-accent/40 transition-colors ${
+                                 uploadFile ? "border-accent/60" : "border-dashed border-border"
+                               }`}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="1.5" className="text-ink-muted shrink-0">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <span className={uploadFile ? "text-ink" : "text-ink-muted"}>
+                    {uploadFile ? uploadFile.name : "Choose font file…"}
+                  </span>
+                  {uploadFile && (
+                    <span className="ml-auto text-xs text-ink-muted font-sans">
+                      {(uploadFile.size / 1024).toFixed(0)} KB
+                    </span>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".woff2,.woff,.ttf,.otf"
+                    className="sr-only"
+                    onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Category */}
             <div>
@@ -240,13 +353,11 @@ export default function AdminFontsPage() {
 
             {/* Error + buttons */}
             <div className="sm:col-span-2 flex items-center gap-3 flex-wrap pt-1">
-              {formError && (
-                <p className="text-sm text-red-500 flex-1">{formError}</p>
-              )}
+              {formError && <p className="text-sm text-red-500 flex-1">{formError}</p>}
               <div className="flex items-center gap-2 ml-auto">
                 <button
                   type="button"
-                  onClick={() => { setShowForm(false); setFormError(""); setForm(EMPTY_FORM); }}
+                  onClick={resetForm}
                   className="px-4 py-2 rounded-md border border-border text-sm text-ink-muted
                              hover:text-ink hover:bg-surface transition-colors"
                 >
@@ -256,9 +367,9 @@ export default function AdminFontsPage() {
                   type="submit"
                   disabled={submitting}
                   className="px-4 py-2 rounded-md bg-accent text-white text-sm font-medium
-                             hover:opacity-90 transition-opacity disabled:opacity-50"
+                             hover:opacity-90 transition-opacity disabled:opacity-50 min-w-[90px]"
                 >
-                  {submitting ? "Adding…" : "Add font"}
+                  {uploading ? "Uploading…" : submitting ? "Adding…" : "Add font"}
                 </button>
               </div>
             </div>
@@ -269,7 +380,6 @@ export default function AdminFontsPage() {
 
       {/* ── Filters ── */}
       <div className="flex flex-wrap items-center gap-3">
-        {/* Category filter */}
         <div className="flex items-center gap-1 flex-wrap">
           {(["ALL", ...ALL_CATEGORIES] as (FontCategory | "ALL")[]).map((c) => (
             <button
@@ -289,7 +399,6 @@ export default function AdminFontsPage() {
 
         <div className="w-px h-5 bg-border hidden sm:block" />
 
-        {/* Status filter */}
         <div className="flex items-center gap-1">
           {(["all", "active", "inactive"] as const).map((s) => (
             <button
@@ -329,7 +438,7 @@ export default function AdminFontsPage() {
                 <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide">Font</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden sm:table-cell">Category</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden md:table-cell">Subsets</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden lg:table-cell">Google name</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide hidden lg:table-cell">Source</th>
                 <th className="text-center px-4 py-3 text-xs font-medium text-ink-muted uppercase tracking-wide">Active</th>
                 <th className="px-4 py-3" />
               </tr>
@@ -351,13 +460,13 @@ export default function AdminFontsPage() {
                   >
                     {/* Name */}
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <a
                           href={`/?font=${font.slug}`}
                           target="_blank"
                           rel="noreferrer"
                           className="font-medium text-ink hover:text-accent transition-colors"
-                          title="Preview in public site"
+                          title="Preview on public site"
                         >
                           {font.name}
                         </a>
@@ -381,9 +490,27 @@ export default function AdminFontsPage() {
                       </div>
                     </td>
 
-                    {/* Google name */}
+                    {/* Source */}
                     <td className="px-4 py-3 hidden lg:table-cell">
-                      <span className="text-ink-muted font-sans text-xs">{font.googleName ?? "—"}</span>
+                      {font.source === "GOOGLE" ? (
+                        <span className="inline-flex items-center gap-1 text-xs text-ink-muted font-sans">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                          </svg>
+                          Google
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs text-ink-muted font-sans">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                          </svg>
+                          Local
+                        </span>
+                      )}
                     </td>
 
                     {/* Toggle */}

@@ -58,9 +58,11 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { name, googleName, category, subsets } = body as {
+  const { name, googleName, filePath, source = "GOOGLE", category, subsets } = body as {
     name: string;
     googleName?: string;
+    filePath?: string;
+    source?: "GOOGLE" | "LOCAL";
     category: FontCategory;
     subsets: string[];
   };
@@ -68,10 +70,20 @@ export async function POST(req: NextRequest) {
   if (!name?.trim() || !category) {
     return NextResponse.json({ error: "name and category are required" }, { status: 400 });
   }
+  if (source === "GOOGLE" && !googleName?.trim() && !name?.trim()) {
+    return NextResponse.json({ error: "googleName is required for Google Fonts" }, { status: 400 });
+  }
+  if (source === "LOCAL" && !filePath) {
+    return NextResponse.json({ error: "filePath is required for local fonts" }, { status: 400 });
+  }
 
-  const resolvedGoogleName = googleName?.trim() || name.trim();
+  const resolvedGoogleName = source === "GOOGLE"
+    ? (googleName?.trim() || name.trim())
+    : undefined;
+
+  // familyCss uses the display name as font-family (must match @font-face declaration for local fonts)
   const slug = slugify(name);
-  const familyCss = buildFamilyCss(resolvedGoogleName, category);
+  const familyCss = buildFamilyCss(name.trim(), category);
 
   // Check for slug conflict
   const existing = await prisma.font.findUnique({ where: { slug } });
@@ -83,9 +95,10 @@ export async function POST(req: NextRequest) {
     data: {
       name: name.trim(),
       slug,
-      source: "GOOGLE",
+      source,
       familyCss,
-      googleName: resolvedGoogleName,
+      googleName: resolvedGoogleName ?? null,
+      filePath: filePath ?? null,
       category,
       subsets: subsets?.length ? subsets : ["latin"],
       isActive: true,

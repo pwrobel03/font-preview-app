@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { loadGoogleFont } from "@/lib/font-loader";
+import { loadFont } from "@/lib/font-loader";
 import { HERO, STATS, CARDS, PULL_QUOTE, DARK_SECTION, FOOTER_TEXT } from "@/lib/content";
 import type { FontRecord } from "@/types";
 
@@ -13,9 +13,7 @@ interface Props {
 
 export default function FontPreview({ font, baseSizePx = 16, compact = false }: Props) {
   useEffect(() => {
-    if (font.source === "GOOGLE" && font.googleName) {
-      loadGoogleFont(font.googleName);
-    }
+    loadFont(font);
   }, [font]);
 
   const ff = font.familyCss;

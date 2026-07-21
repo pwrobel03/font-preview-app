@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import type { FontRecord, FontCategory } from "@/types";
 import { CATEGORY_LABELS } from "@/types";
-import { loadGoogleFont } from "@/lib/font-loader";
+import { loadFont } from "@/lib/font-loader";
 
 interface Props {
   fonts: FontRecord[];
@@ -39,9 +39,7 @@ export default function FontSelector({ fonts, value, onChange, label, dark = fal
       if (!fontsPreloaded.current) {
         fontsPreloaded.current = true;
         fonts.forEach((f) => {
-          if (f.source === "GOOGLE" && f.googleName) {
-            loadGoogleFont(f.googleName);
-          }
+          loadFont(f);
         });
       }
     }

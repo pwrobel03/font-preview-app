@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { loadGoogleFont } from "@/lib/font-loader";
+import { loadFont } from "@/lib/font-loader";
 import { CATEGORY_LABELS } from "@/types";
 import type { FontRecord, FontCategory } from "@/types";
 
@@ -29,7 +29,7 @@ export default function GalleryPage() {
         setLoading(false);
         // Preload all fonts for the gallery
         data.forEach((f) => {
-          if (f.source === "GOOGLE" && f.googleName) loadGoogleFont(f.googleName);
+          loadFont(f);
         });
       });
   }, []);
